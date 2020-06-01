@@ -3,8 +3,7 @@
 
 Go library and tooling for working with EZproxy.
 
-[![Latest Release](https://img.shields.io/github/release/atc0005/go-ezproxy.svg?style=flat-square)](https://github.com/atc0005/go-ezproxy/releases
-/latest)
+[![Latest Release](https://img.shields.io/github/release/atc0005/go-ezproxy.svg?style=flat-square)](https://github.com/atc0005/go-ezproxy/releases/latest)
 [![GoDoc](https://godoc.org/github.com/atc0005/go-ezproxy?status.svg)](https://godoc.org/github.com/atc0005/go-ezproxy)
 ![Validate Codebase](https://github.com/atc0005/go-ezproxy/workflows/Validate%20Codebase/badge.svg)
 ![Validate Docs](https://github.com/atc0005/go-ezproxy/workflows/Validate%20Docs/badge.svg)
