@@ -1,6 +1,6 @@
 // Copyright 2020 Adam Chalkley
 //
-// https://github.com/atc0005/brick
+// https://github.com/atc0005/go-ezproxy
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.

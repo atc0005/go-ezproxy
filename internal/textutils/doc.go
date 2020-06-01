@@ -14,6 +14,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package activefile is intended for the processing of EZproxy active users
-// and hosts files
-package activefile
+// Package textutils is an internal package that contains helper functions for
+// working with common text structures.
+package textutils

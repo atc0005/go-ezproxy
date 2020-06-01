@@ -14,6 +14,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package activefile is intended for the processing of EZproxy active users
-// and hosts files
-package activefile
+package textutils
+
+// InList is a helper function to emulate Python's `if "x"
+// in list:` functionality
+func InList(needle string, haystack []string) bool {
+	for _, item := range haystack {
+		if item == needle {
+			return true
+		}
+	}
+	return false
+}
