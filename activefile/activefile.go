@@ -191,10 +191,11 @@ func (afr *activeFileReader) SetSearchDelay(delay int) error {
 	return nil
 }
 
-// UserSessions uses the previously provided username to return a list of all
-// matching session IDs along with their associated IP Address in the form of
-// a slice of UserSession values.
-func (afr activeFileReader) UserSessions() (ezproxy.UserSessions, error) {
+// AllUserSessions returns a list of all session IDs along with their associated
+// IP Address in the form of a slice of UserSession values. This list of
+// session IDs is intended for further processing such as filtering to a
+// specific username or aggregating to check thresholds.
+func (afr activeFileReader) AllUserSessions() (ezproxy.UserSessions, error) {
 
 	// Lines containing the session entries
 	validPrefixes := []string{
@@ -204,10 +205,134 @@ func (afr activeFileReader) UserSessions() (ezproxy.UserSessions, error) {
 
 	var allUserSessions ezproxy.UserSessions
 
+	fileEntryDelimiter := " "
+
+	validLines, filterErr := afr.filterEntries(validPrefixes)
+	if filterErr != nil {
+		return nil, fmt.Errorf(
+			"failed to filter active file entries while generating list of user sessions: %w",
+			filterErr,
+		)
+	}
+
+	// Ensure that the gathered lines consist of pairs, otherwise we are
+	// likely dealing with an invalid active users file. At this point we
+	// should bail as continuing would likely mean identifying the wrong user
+	// session for termination.
+	if !(len(validLines)%2 == 0) {
+		errMsg := fmt.Sprintf(
+			"error: Incomplete data pairs (%d lines) found in file %q while searching for %q user sessions",
+			len(validLines),
+			afr.Filename,
+			afr.Username,
+		)
+		ezproxy.Logger.Println(errMsg)
+		return nil, errors.New(errMsg)
+	}
+
+	for idx, currentLine := range validLines {
+
+		activeFileEntry := strings.Split(currentLine.Text, fileEntryDelimiter)
+		lineno := currentLine.Number
+		switch activeFileEntry[0] {
+		case SessionLinePrefix:
+			// line 1 of 2 (even numbered idx)
+			// session ID as field 2, IP Address as field 7
+
+			// if not even numbered line, but the username only occurs on even
+			// numbered lines
+			// if !(idx%2 == 0) {
+			if (idx%2 == 1) && (SessionLineEvenNumbered) {
+
+				// We have found a "S" prefixed line out of expected order.
+				// This suggests an invalid active users file or a bug in the
+				// earlier application logic used when generating the list of
+				// valid file entries.
+
+				errMsg := fmt.Sprintf(
+					"error: Unexpected data pair ordering encountered at line %d in the active users file %q while searching for %q; "+
+						"session line is odd numbered",
+					lineno,
+					afr.Filename,
+					afr.Username,
+				)
+				ezproxy.Logger.Println(errMsg)
+				return nil, errors.New(errMsg)
+			}
+
+			allUserSessions = append(allUserSessions, ezproxy.UserSession{
+				SessionID: activeFileEntry[1],
+				IPAddress: activeFileEntry[6],
+			})
+		case UsernameLinePrefix:
+			// line 2 of 2 (odd numbered idx)
+			// username as field 2
+
+			if (idx%2 == 1) && (UsernameLineEvenNumbered) {
+
+				// We have found a "L" prefixed line out of expected order.
+				// This suggests an invalid active users file or a bug in the
+				// earlier application logic used when generating the list of
+				// valid file entries.
+
+				errMsg := fmt.Sprintf(
+					"error: Unexpected data pair ordering encountered at line %d in the active users file %q while searching for %q; "+
+						"session line is odd numbered",
+					lineno,
+					afr.Filename,
+					afr.Username,
+				)
+				ezproxy.Logger.Println(errMsg)
+				return nil, errors.New(errMsg)
+			}
+
+			// Use the length of the collected user sessions minus 1 as the
+			// index into the allUserSessions slice. The intent is to get
+			// access to the partial ActiveUserSession that was just
+			// constructed from the previous 'S' line in order to include the
+			// username alongside the existing Session ID and IP Address
+			// fields.
+			prevSessionIdx := len(allUserSessions) - 1
+			if prevSessionIdx < 0 {
+
+				ezproxy.Logger.Printf(
+					"Current text from username line %d: %v",
+					lineno,
+					activeFileEntry,
+				)
+
+				errMsg := fmt.Sprintf(
+					"error: unable to update partial ActiveUserSession from line %d; "+
+						"unable to reliably determine session ID for %q",
+					lineno-1,
+					afr.Username,
+				)
+				ezproxy.Logger.Println(errMsg)
+				return nil, errors.New(errMsg)
+			}
+			allUserSessions[prevSessionIdx].Username = activeFileEntry[1]
+		default:
+			continue
+		}
+
+	}
+
+	ezproxy.Logger.Printf(
+		"Found %d active sessions\n",
+		len(allUserSessions),
+	)
+
+	return allUserSessions, nil
+
+}
+
+// UserSessions uses the previously provided username to return a list of all
+// matching session IDs along with their associated IP Address in the form of
+// a slice of UserSession values.
+func (afr activeFileReader) UserSessions() (ezproxy.UserSessions, error) {
+
 	// What we will return to the the caller
 	var requestedUserSessions []ezproxy.UserSession
-
-	fileEntryDelimiter := " "
 
 	searchAttemptsAllowed := afr.SearchRetries + 1
 
@@ -228,114 +353,12 @@ func (afr activeFileReader) UserSessions() (ezproxy.UserSessions, error) {
 		)
 		time.Sleep(afr.SearchDelay)
 
-		validLines, filterErr := afr.filterEntries(validPrefixes)
-		if filterErr != nil {
+		allUserSessions, err := afr.AllUserSessions()
+		if err != nil {
 			return nil, fmt.Errorf(
-				"failed to filter active file entries while generating list of user sessions: %w",
-				filterErr,
+				"func UserSessions: failed to retrieve all user sessions in order to filter to specific username: %w",
+				err,
 			)
-		}
-
-		// Ensure that the gathered lines consist of pairs, otherwise we are
-		// likely dealing with an invalid active users file. At this point we
-		// should bail as continuing would likely mean identifying the wrong user
-		// session for termination.
-		if !(len(validLines)%2 == 0) {
-			errMsg := fmt.Sprintf(
-				"error: Incomplete data pairs (%d lines) found in file %q while searching for %q user sessions",
-				len(validLines),
-				afr.Filename,
-				afr.Username,
-			)
-			ezproxy.Logger.Println(errMsg)
-			return nil, errors.New(errMsg)
-		}
-
-		for idx, currentLine := range validLines {
-
-			activeFileEntry := strings.Split(currentLine.Text, fileEntryDelimiter)
-			lineno := currentLine.Number
-			switch activeFileEntry[0] {
-			case SessionLinePrefix:
-				// line 1 of 2 (even numbered idx)
-				// session ID as field 2, IP Address as field 7
-
-				// if not even numbered line, but the username only occurs on even
-				// numbered lines
-				// if !(idx%2 == 0) {
-				if (idx%2 == 1) && (SessionLineEvenNumbered) {
-
-					// We have found a "S" prefixed line out of expected order.
-					// This suggests an invalid active users file or a bug in the
-					// earlier application logic used when generating the list of
-					// valid file entries.
-
-					errMsg := fmt.Sprintf(
-						"error: Unexpected data pair ordering encountered at line %d in the active users file %q while searching for %q; "+
-							"session line is odd numbered",
-						lineno,
-						afr.Filename,
-						afr.Username,
-					)
-					ezproxy.Logger.Println(errMsg)
-					return nil, errors.New(errMsg)
-				}
-
-				allUserSessions = append(allUserSessions, ezproxy.UserSession{
-					SessionID: activeFileEntry[1],
-					IPAddress: activeFileEntry[6],
-				})
-			case UsernameLinePrefix:
-				// line 2 of 2 (odd numbered idx)
-				// username as field 2
-
-				if (idx%2 == 1) && (UsernameLineEvenNumbered) {
-
-					// We have found a "L" prefixed line out of expected order.
-					// This suggests an invalid active users file or a bug in the
-					// earlier application logic used when generating the list of
-					// valid file entries.
-
-					errMsg := fmt.Sprintf(
-						"error: Unexpected data pair ordering encountered at line %d in the active users file %q while searching for %q; "+
-							"session line is odd numbered",
-						lineno,
-						afr.Filename,
-						afr.Username,
-					)
-					ezproxy.Logger.Println(errMsg)
-					return nil, errors.New(errMsg)
-				}
-
-				// Use the length of the collected user sessions minus 1 as the
-				// index into the allUserSessions slice. The intent is to get
-				// access to the partial ActiveUserSession that was just
-				// constructed from the previous 'S' line in order to include the
-				// username alongside the existing Session ID and IP Address
-				// fields.
-				prevSessionIdx := len(allUserSessions) - 1
-				if prevSessionIdx < 0 {
-
-					ezproxy.Logger.Printf(
-						"Current text from username line %d: %v",
-						lineno,
-						activeFileEntry,
-					)
-
-					errMsg := fmt.Sprintf(
-						"error: unable to update partial ActiveUserSession from line %d; "+
-							"unable to reliably determine session ID for %q",
-						lineno-1,
-						afr.Username,
-					)
-					ezproxy.Logger.Println(errMsg)
-					return nil, errors.New(errMsg)
-				}
-				allUserSessions[prevSessionIdx].Username = activeFileEntry[1]
-			default:
-				continue
-			}
-
 		}
 
 		// filter all user sessions found earlier just to the requested user
