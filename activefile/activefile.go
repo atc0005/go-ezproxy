@@ -340,9 +340,10 @@ func (afr activeFileReader) UserSessions() (ezproxy.UserSessions, error) {
 	for searchAttempts := 1; searchAttempts <= searchAttemptsAllowed; searchAttempts++ {
 
 		ezproxy.Logger.Printf(
-			"Beginning search attempt %d of %d\n",
+			"Beginning search attempt %d of %d for %q\n",
 			searchAttempts,
 			searchAttemptsAllowed,
+			afr.Username,
 		)
 
 		// Intentional delay in an effort to better avoid stale data due to

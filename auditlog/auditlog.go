@@ -107,11 +107,11 @@ type AuditReader interface {
 // Example: "2020-05-24 00:17:37"
 const TimeStampLayout string = "2006-01-02 15:04:05"
 
-// SessionEntries uses the previously provided username as a search key, the
-// previously provided filename to search through and returns a slice of
-// SessionEntry values which reflect entries in the specified audit
-// file for that username
-func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
+// AllSessionEntries uses the previously provided filename to search
+// through and return a slice of SessionEntry values which reflect ALL
+// session-related events. The SessionEntry values returned are NOT
+// filtered to a specific username.
+func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 
 	// These are events that contain relevant details for our work
 	validEvents := []string{
@@ -123,19 +123,11 @@ func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
 		EventLogout,
 	}
 
-	// Intentional delay in an effort to better avoid stale data due to
-	// potential race condition with EZproxy write delays.
-	ezproxy.Logger.Printf(
-		"Intentionally delaying for %v to help avoid race condition due to delayed EZproxy writes\n",
-		alr.SearchDelay,
-	)
-	time.Sleep(alr.SearchDelay)
-
 	ezproxy.Logger.Printf("Attempting to open %q\n", alr.Filename)
 
 	f, err := os.Open(alr.Filename)
 	if err != nil {
-		return nil, fmt.Errorf("error encountered opening file %q: %w", alr.Filename, err)
+		return nil, fmt.Errorf("func AllSessionEntries: error encountered opening file %q: %w", alr.Filename, err)
 	}
 	defer f.Close()
 
@@ -184,16 +176,13 @@ func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
 
 		if strings.EqualFold(auditFileEntry[1], EventLogout) {
 
-			// filter to just the username we're after
-			if strings.EqualFold(auditFileEntry[2], alr.Username) {
-				logoutEvents = append(logoutEvents, SessionEntry{
-					Datestamp: auditFileEntry[0],
-					Event:     auditFileEntry[1],
-					IPAddress: "",
-					Username:  auditFileEntry[2],
-					SessionID: auditFileEntry[3],
-				})
-			}
+			logoutEvents = append(logoutEvents, SessionEntry{
+				Datestamp: auditFileEntry[0],
+				Event:     auditFileEntry[1],
+				IPAddress: "",
+				Username:  auditFileEntry[2],
+				SessionID: auditFileEntry[3],
+			})
 
 			continue
 		}
@@ -202,27 +191,21 @@ func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
 		//
 		// Login.Success
 		// Login.Success.Relogin
-		if strings.EqualFold(auditFileEntry[3], alr.Username) {
-			userSessionIDsIndex[auditFileEntry[3]] = SessionEntry{
-				Datestamp: auditFileEntry[0],
-				Event:     auditFileEntry[1],
-				IPAddress: auditFileEntry[2],
-				Username:  auditFileEntry[3],
-				SessionID: auditFileEntry[4],
-			}
+		userSessionIDsIndex[auditFileEntry[3]] = SessionEntry{
+			Datestamp: auditFileEntry[0],
+			Event:     auditFileEntry[1],
+			IPAddress: auditFileEntry[2],
+			Username:  auditFileEntry[3],
+			SessionID: auditFileEntry[4],
 		}
-
 	}
 
 	ezproxy.Logger.Println("Exited s.Scan() loop")
 
 	// report any errors encountered while scanning the input file
 	if err := s.Err(); err != nil {
-		return nil, fmt.Errorf("func SessionEntries: errors encountered while scanning the input file: %w", err)
+		return nil, fmt.Errorf("func AllSessionEntries: errors encountered while scanning the input file: %w", err)
 	}
-
-	// Will each entry in the map account for IP changes?
-	// Is this really a concern?
 
 	// Loop over logoutEvents, remove matching entries from the
 	// userSessionIDsIndex map
@@ -240,22 +223,83 @@ func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
 
 }
 
-// UserSessions uses the previously provided username to return a list of all
-// matching session IDs along with their associated IP Address in the form of
-// a slice of UserSession values.
-func (alr auditLogReader) UserSessions() (ezproxy.UserSessions, error) {
+// SessionEntries uses the previously provided username as a search key, the
+// previously provided filename to search through and returns a slice of
+// SessionEntry values which reflect entries in the specified audit
+// file for that username
+func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
+
+	ezproxy.Logger.Printf("Searching for: %q\n", alr.Username)
 
 	searchAttemptsAllowed := alr.SearchRetries + 1
 
-	var sessionEntries SessionEntries
+	requestedSessionEntries := make(SessionEntries, 0, ezproxy.SessionsLimit)
 
 	// Perform the search up to X times
 	for searchAttempts := 1; searchAttempts <= searchAttemptsAllowed; searchAttempts++ {
 
 		ezproxy.Logger.Printf(
-			"Beginning search attempt %d of %d\n",
+			"Beginning search attempt %d of %d for %q\n",
 			searchAttempts,
 			searchAttemptsAllowed,
+			alr.Username,
+		)
+
+		// Intentional delay in an effort to better avoid stale data due to
+		// potential race condition with EZproxy write delays.
+		ezproxy.Logger.Printf(
+			"Intentionally delaying for %v to help avoid race condition due to delayed EZproxy writes\n",
+			alr.SearchDelay,
+		)
+		time.Sleep(alr.SearchDelay)
+
+		allSessionEntries, err := alr.AllSessionEntries()
+		if err != nil {
+			return nil, fmt.Errorf(
+				"func SessionEntries: failed to retrieve all session entries in order to filter to specific username: %w",
+				err,
+			)
+		}
+
+		// Filter ALL session entries in the audit log to the requested username
+		for _, entry := range allSessionEntries {
+			if strings.EqualFold(entry.Username, alr.Username) {
+				requestedSessionEntries = append(requestedSessionEntries, entry)
+			}
+		}
+
+		// skip further attempts to find entries if we already found some
+		if len(requestedSessionEntries) > 0 {
+			break
+		}
+
+		continue
+
+	}
+
+	return requestedSessionEntries, nil
+
+}
+
+// UserSessions uses the previously provided username to return a list of all
+// matching session IDs along with their associated IP Address in the form of
+// a slice of UserSession values.
+func (alr auditLogReader) UserSessions() (ezproxy.UserSessions, error) {
+
+	ezproxy.Logger.Printf("Searching for: %q\n", alr.Username)
+
+	searchAttemptsAllowed := alr.SearchRetries + 1
+
+	sessionEntries := make(SessionEntries, 0, ezproxy.SessionsLimit)
+
+	// Perform the search up to X times
+	for searchAttempts := 1; searchAttempts <= searchAttemptsAllowed; searchAttempts++ {
+
+		ezproxy.Logger.Printf(
+			"Beginning search attempt %d of %d for %q\n",
+			searchAttempts,
+			searchAttemptsAllowed,
+			alr.Username,
 		)
 
 		// Intentional delay in an effort to better avoid stale data due to
