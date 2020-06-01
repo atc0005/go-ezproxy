@@ -332,7 +332,7 @@ func (afr activeFileReader) AllUserSessions() (ezproxy.UserSessions, error) {
 func (afr activeFileReader) UserSessions() (ezproxy.UserSessions, error) {
 
 	// What we will return to the the caller
-	var requestedUserSessions []ezproxy.UserSession
+	requestedUserSessions := make([]ezproxy.UserSession, 0, ezproxy.SessionsLimit)
 
 	searchAttemptsAllowed := afr.SearchRetries + 1
 
