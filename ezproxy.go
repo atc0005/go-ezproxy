@@ -122,6 +122,13 @@ type UserSessions []UserSession
 // SessionsReader is the API for retrieving user sessions from one of the
 // audit log or active users and hosts files.
 type SessionsReader interface {
+
+	// AllUserSessions returns a list of all session IDs along with their associated
+	// IP Address in the form of a slice of UserSession values. This list of
+	// session IDs is intended for further processing such as filtering to a
+	// specific username or aggregating to check thresholds.
+	AllUserSessions() (UserSessions, error)
+
 	// UserSessions uses the previously provided username to return a list of
 	// all matching session IDs along with their associated IP Address in the
 	// form of a slice of UserSession values.

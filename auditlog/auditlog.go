@@ -96,6 +96,12 @@ type AuditReader interface {
 	// SessionEntry values which reflect entries in the specified audit
 	// file for that username
 	SessionEntries() (SessionEntries, error)
+
+	// AllSessionEntries uses the previously provided filename to search
+	// through and return a slice of SessionEntry values which reflect ALL
+	// session-related events. The SessionEntry values returned are NOT
+	// filtered to a specific username.
+	AllSessionEntries() (SessionEntries, error)
 }
 
 // Example: "2020-05-24 00:17:37"
