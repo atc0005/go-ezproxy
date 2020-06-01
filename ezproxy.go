@@ -54,11 +54,18 @@ func DisableLogging() {
 	Logger.SetOutput(ioutil.Discard)
 }
 
-// This is intended to approximate the `::Limit=X` (where X is a positive
-// whole number) value set within the user.txt EZproxy config file. This
-// package uses this value as a preallocation capacity value for maps and
-// slices.
-const SessionsLimit int = 4
+const (
+
+	// This is intended to approximate the `::Limit=X` (where X is a positive
+	// whole number) value set within the user.txt EZproxy config file. This
+	// package uses this value as a preallocation capacity value for maps and
+	// slices.
+	SessionsLimit int = 4
+
+	// This is simply a guess to use as a baseline for preallocating slice/map
+	// capacity in regards to ALL user sessions
+	AllUsersSessionsLimit int = SessionsLimit * 10
+)
 
 // This is as of the 6.x series
 const (
