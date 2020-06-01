@@ -223,10 +223,9 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 
 }
 
-// SessionEntries uses the previously provided username as a search key, the
-// previously provided filename to search through and returns a slice of
-// SessionEntry values which reflect entries in the specified audit
-// file for that username
+// SessionEntries uses the previously provided username as a search key and
+// returns a slice of SessionEntry values which reflect entries in the
+// specified audit file for that username
 func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
 
 	ezproxy.Logger.Printf("Searching for: %q\n", alr.Username)
