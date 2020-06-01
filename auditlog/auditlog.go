@@ -280,6 +280,36 @@ func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
 
 }
 
+// AllUserSessions returns a list of all session IDs along with their associated
+// IP Address in the form of a slice of UserSession values. This list of
+// session IDs is intended for further processing such as filtering to a
+// specific username or aggregating to check thresholds.
+func (alr auditLogReader) AllUserSessions() (ezproxy.UserSessions, error) {
+
+	allUserSessions := make(ezproxy.UserSessions, 0, ezproxy.AllUsersSessionsLimit)
+
+	allSessionEntries, err := alr.AllSessionEntries()
+	if err != nil {
+		return nil, fmt.Errorf(
+			"func AllUserSessions: failed to retrieve all session entries in order to convert to user sessions for all users: %w",
+			err,
+		)
+	}
+
+	for _, entry := range allSessionEntries {
+		if strings.EqualFold(entry.Username, alr.Username) {
+			allUserSessions = append(allUserSessions, ezproxy.UserSession{
+				Username:  entry.Username,
+				IPAddress: entry.IPAddress,
+				SessionID: entry.SessionID,
+			})
+		}
+	}
+
+	return allUserSessions, nil
+
+}
+
 // UserSessions uses the previously provided username to return a list of all
 // matching session IDs along with their associated IP Address in the form of
 // a slice of UserSession values.
