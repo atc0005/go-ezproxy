@@ -14,6 +14,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package ezproxy is intended for the processing of EZproxy related files and
-// sessions
+/*
+
+Package ezproxy is intended for the processing of EZproxy related files and
+sessions.
+
+PROJECT HOME
+
+See our GitHub repo (https://github.com/atc0005/go-ezproxy) for the latest
+code, to file an issue or submit improvements for review and potential
+inclusion into the project.
+
+PURPOSE
+
+Process EZproxy related files sessions.
+
+FEATURES
+
+•  placeholder
+
+*/
 package ezproxy
