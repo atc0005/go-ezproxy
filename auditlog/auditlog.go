@@ -52,10 +52,17 @@ type SessionEntry struct {
 	// friction when ingesting audit log entries. We can convert later
 	// when/if needed.
 	Datestamp string
-	Event     string
+
+	// Event is the event type associated with an entry in the audit file
+	Event string
+
+	// IPAddress is an IP Adddress associated with an entry in the audit file
 	IPAddress string
-	Username  string
-	// SessionID SessionID
+
+	// Username is the username associated with an entry in the audit file
+	Username string
+
+	// SessionID is the session ID associated with an entry in the audit file
 	SessionID string
 }
 
