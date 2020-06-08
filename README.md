@@ -70,6 +70,13 @@ TODO: Verify this list, extend as applicable
 
 ## Documentation
 
+TODO: Put the bulk of the documentation efforts into the doc.go file. This is
+the API exposure point that will need the most focus as users will go there
+instead of reading over this file in detail.
+
+REMEMBER: The target audience for this package is other developers. The target
+for `brick` is sysadmins, so the README/Markdown files are for them.
+
 ## License
 
 Taken directly from the [`LICENSE`](LICENSE) and [`NOTICE.txt`](NOTICE.txt) files:
