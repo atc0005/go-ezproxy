@@ -326,10 +326,10 @@ func (afr activeFileReader) AllUserSessions() (ezproxy.UserSessions, error) {
 
 }
 
-// UserSessions uses the previously provided username to return a list of all
-// matching session IDs along with their associated IP Address in the form of
-// a slice of UserSession values.
-func (afr activeFileReader) UserSessions() (ezproxy.UserSessions, error) {
+// MatchingUserSessions uses the previously provided username to return a list
+// of all matching session IDs along with their associated IP Address in the
+// form of a slice of UserSession values.
+func (afr activeFileReader) MatchingUserSessions() (ezproxy.UserSessions, error) {
 
 	// What we will return to the the caller
 	requestedUserSessions := make([]ezproxy.UserSession, 0, ezproxy.SessionsLimit)

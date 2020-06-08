@@ -139,7 +139,7 @@ type SessionsReader interface {
 	// UserSessions uses the previously provided username to return a list of
 	// all matching session IDs along with their associated IP Address in the
 	// form of a slice of UserSession values.
-	UserSessions() (UserSessions, error)
+	MatchingUserSessions() (UserSessions, error)
 
 	// SetSearchRetries is a helper method for setting the number of additional
 	// retries allowed when receiving zero search results.

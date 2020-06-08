@@ -100,11 +100,11 @@ type auditLogReader struct {
 type AuditReader interface {
 	ezproxy.SessionsReader
 
-	// SessionEntries uses the previously provided username as a search key, the
-	// previously provided filename to search through and returns a slice of
-	// SessionEntry values which reflect entries in the specified audit
-	// file for that username
-	SessionEntries() (SessionEntries, error)
+	// MatchingSessionEntries uses the previously provided username as a
+	// search key, the previously provided filename to search through and
+	// returns a slice of SessionEntry values which reflect entries in the
+	// specified audit file for that username
+	MatchingSessionEntries() (SessionEntries, error)
 
 	// AllSessionEntries uses the previously provided filename to search
 	// through and return a slice of SessionEntry values which reflect ALL
@@ -232,10 +232,10 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 
 }
 
-// SessionEntries uses the previously provided username as a search key and
-// returns a slice of SessionEntry values which reflect entries in the
+// MatchingSessionEntries uses the previously provided username as a search
+// key and returns a slice of SessionEntry values which reflect entries in the
 // specified audit file for that username
-func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
+func (alr auditLogReader) MatchingSessionEntries() (SessionEntries, error) {
 
 	ezproxy.Logger.Printf("Searching for: %q\n", alr.Username)
 
@@ -289,10 +289,10 @@ func (alr auditLogReader) SessionEntries() (SessionEntries, error) {
 
 }
 
-// AllUserSessions returns a list of all session IDs along with their associated
-// IP Address in the form of a slice of UserSession values. This list of
-// session IDs is intended for further processing such as filtering to a
-// specific username or aggregating to check thresholds.
+// AllUserSessions returns a list of all session IDs along with their
+// associated IP Address in the form of a slice of UserSession values. This
+// list of session IDs is intended for further processing such as filtering to
+// a specific username or aggregating to check thresholds.
 func (alr auditLogReader) AllUserSessions() (ezproxy.UserSessions, error) {
 
 	allUserSessions := make(ezproxy.UserSessions, 0, ezproxy.AllUsersSessionsLimit)
@@ -317,10 +317,10 @@ func (alr auditLogReader) AllUserSessions() (ezproxy.UserSessions, error) {
 
 }
 
-// UserSessions uses the previously provided username to return a list of all
-// matching session IDs along with their associated IP Address in the form of
-// a slice of UserSession values.
-func (alr auditLogReader) UserSessions() (ezproxy.UserSessions, error) {
+// MatchingUserSessions uses the previously provided username to return a list
+// of all matching session IDs along with their associated IP Address in the
+// form of a slice of UserSession values.
+func (alr auditLogReader) MatchingUserSessions() (ezproxy.UserSessions, error) {
 
 	ezproxy.Logger.Printf("Searching for: %q\n", alr.Username)
 
@@ -347,7 +347,7 @@ func (alr auditLogReader) UserSessions() (ezproxy.UserSessions, error) {
 		time.Sleep(alr.SearchDelay)
 
 		var err error
-		sessionEntries, err = alr.SessionEntries()
+		sessionEntries, err = alr.MatchingSessionEntries()
 		if err != nil {
 			return nil, fmt.Errorf("func UserSessions: unable to convert audit log session entries to user sessions: %w", err)
 		}
