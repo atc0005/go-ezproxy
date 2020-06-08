@@ -70,7 +70,9 @@ type SessionEntry struct {
 // Intended for aggregation before bulk processing of some kind.
 type SessionEntries []SessionEntry
 
-// auditLogReader represents a file reader specific to EZProxy audit logs
+// auditLogReader represents a file reader specific to EZProxy audit logs.
+// This type is intended for internal use only and for that reason is not
+// exposed for external use. See also the AuditReader type.
 type auditLogReader struct {
 
 	// SearchDelay is the intentional delay between each attempt to open and
@@ -363,7 +365,9 @@ func (alr auditLogReader) UserSessions() (ezproxy.UserSessions, error) {
 
 }
 
-// UserSession converts an SessionEntry value to UserSession value
+// UserSession converts a SessionEntry value to a UserSession value. How the
+// SessionEntry value was retrieved determines whether the UserSession value
+// is filtered to a specific username or not.
 func (se SessionEntry) UserSession() ezproxy.UserSession {
 	return ezproxy.UserSession{
 		SessionID: se.SessionID,
@@ -373,7 +377,9 @@ func (se SessionEntry) UserSession() ezproxy.UserSession {
 }
 
 // UserSessions converts a collection of SessionEntry values into a collection
-// of UserSession values.
+// of UserSession values. How the SessionEntry values were retrieved
+// determines whether the UserSession values are filtered to a specific
+// username or not.
 func (se SessionEntries) UserSessions() ezproxy.UserSessions {
 
 	userSessions := make(ezproxy.UserSessions, 0, ezproxy.SessionsLimit)
