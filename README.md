@@ -68,6 +68,12 @@ TODO: Verify this list, extend as applicable
 
 ## Changelog
 
+See the [`CHANGELOG.md`](CHANGELOG.md) file for the changes associated with
+each release of this application. Changes that have been merged to `master`,
+but not yet an official release may also be noted in the file under the
+`Unreleased` section. A helpful link to the Git commit history since the last
+official release is also provided for further review.
+
 ## Documentation
 
 TODO: Put the bulk of the documentation efforts into the doc.go file. This is
