@@ -304,13 +304,11 @@ func (alr auditLogReader) AllUserSessions() (ezproxy.UserSessions, error) {
 	}
 
 	for _, entry := range allSessionEntries {
-		if strings.EqualFold(entry.Username, alr.Username) {
-			allUserSessions = append(allUserSessions, ezproxy.UserSession{
-				Username:  entry.Username,
-				IPAddress: entry.IPAddress,
-				SessionID: entry.SessionID,
-			})
-		}
+		allUserSessions = append(allUserSessions, ezproxy.UserSession{
+			Username:  entry.Username,
+			IPAddress: entry.IPAddress,
+			SessionID: entry.SessionID,
+		})
 	}
 
 	return allUserSessions, nil
