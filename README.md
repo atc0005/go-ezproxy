@@ -3,8 +3,8 @@
 
 Go library and tooling for working with EZproxy.
 
-[![Latest Release](https://img.shields.io/github/release/atc0005/go-ezproxy.svg?style=flat-square)](https://github.com/atc0005/go-ezproxy/releases/latest)
-[![GoDoc](https://godoc.org/github.com/atc0005/go-ezproxy?status.svg)](https://godoc.org/github.com/atc0005/go-ezproxy)
+[![Latest Release](https://img.shields.io/github/release/atc0005/go-ezproxy.svg?style=flat-square)][release-latest]
+[![GoDoc](https://godoc.org/github.com/atc0005/go-ezproxy?status.svg)][docs-homepage]
 ![Validate Codebase](https://github.com/atc0005/go-ezproxy/workflows/Validate%20Codebase/badge.svg)
 ![Validate Docs](https://github.com/atc0005/go-ezproxy/workflows/Validate%20Docs/badge.svg)
 
@@ -19,6 +19,7 @@ Go library and tooling for working with EZproxy.
   - [Missing](#missing)
 - [Changelog](#changelog)
 - [Documentation](#documentation)
+- [Examples](#examples)
 - [License](#license)
 - [References](#references)
   - [Related projects](#related-projects)
@@ -26,7 +27,7 @@ Go library and tooling for working with EZproxy.
 
 ## Status
 
-Pre-alpha; very much getting a feel for how the project will be structured
+Alpha; very much getting a feel for how the project will be structured
 long-term and what functionality will be offered.
 
 As of this writing, the existing functionality was added specifically to
@@ -46,7 +47,7 @@ application, not in any way replace it.
 
 ## Project home
 
-See [our GitHub repo](https://github.com/atc0005/go-ezproxy) for the latest code,
+See [our GitHub repo][repo-url] for the latest code,
 to file an issue or submit improvements for review and potential inclusion
 into the project.
 
@@ -54,13 +55,20 @@ into the project.
 
 ### Current
 
-TODO: Verify this list, extend as applicable
+- generate a list of audit records for session-related events
+  - for all usernames
+  - for a specific username
 
-- generate a list of active sessions for a specific username
-- generate a list of active sessions for *all* usernames
-- generate a list of active sessions based solely on audit log entries without
-  a corresponding logout event type
-- generate a list of audit records for a specific username
+- generate a list of active sessions using audit log
+  - using entires without a corresponding logout event type
+
+- generate a list of active sessions using active file
+  - for all usernames
+  - for a specific username
+
+- terminate user sessions
+  - single user session
+  - bulk user sessions
 
 ### Missing
 
@@ -76,12 +84,14 @@ official release is also provided for further review.
 
 ## Documentation
 
-TODO: Put the bulk of the documentation efforts into the doc.go file. This is
-the API exposure point that will need the most focus as users will go there
-instead of reading over this file in detail.
+Please see our [GoDoc][docs-homepage] coverage. If something doesn't make
+sense, please [file an issue][repo-url] and note what is (or was) unclear.
 
-REMEMBER: The target audience for this package is other developers. The target
-for `brick` is sysadmins, so the README/Markdown files are for them.
+## Examples
+
+Please see our [GoDoc][docs-homepage] coverage for general usage and the
+[examples](examples/README.md) doc for a list of applications developed using
+this module.
 
 ## License
 
@@ -120,3 +130,13 @@ specific language governing permissions and limitations under the License.
 - <https://help.oclc.org/Library_Management/EZproxy/Configure_resources/Option_LogSession>
 - <https://help.oclc.org/Library_Management/EZproxy/Configure_resources/Option_LogUser>
 - <https://help.oclc.org/Library_Management/EZproxy/Get_started/Join_the_EZproxy_listserv_and_Community_Center>
+
+<!-- Footnotes here  -->
+
+[repo-url]: <https://github.com/atc0005/go-ezproxy>  "This project's GitHub repo"
+
+[docs-homepage]: <https://godoc.org/github.com/atc0005/go-ezproxy>  "GoDoc coverage"
+
+[release-latest]: <https://github.com/atc0005/go-ezproxy/releases/latest>  "Latest Release"
+
+<!-- []: PLACEHOLDER "DESCRIPTION_HERE" -->

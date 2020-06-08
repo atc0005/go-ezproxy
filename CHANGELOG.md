@@ -35,7 +35,24 @@ with the processing of EZproxy related files and sessions.
 
 ### Added
 
-- placeholder
+- generate a list of audit records for session-related events
+  - for all usernames
+  - for a specific username
+
+- generate a list of active sessions using audit log
+  - using entires without a corresponding logout event type
+
+- generate a list of active sessions using active file
+  - for all usernames
+  - for a specific username
+
+- terminate user sessions
+  - single user session
+  - bulk user sessions
+
+### Missing
+
+- Anything to do with traffic log entries
 
 - Go modules support (vs classic `GOPATH` setup)
 
