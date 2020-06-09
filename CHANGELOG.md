@@ -26,12 +26,15 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
-## [v0.1.0] - 2020-06-xx
+## [v0.1.0] - 2020-06-09
 
 Initial release!
 
 This release provides an early release version of a library intended for use
-with the processing of EZproxy related files and sessions.
+with the processing of EZproxy related files and sessions. This library was
+developed specifically to support the development of an in-progress
+application, so the full context may not be entirely clear until that
+application is released (currently pending review).
 
 ### Added
 

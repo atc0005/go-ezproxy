@@ -30,9 +30,9 @@ Go library and tooling for working with EZproxy.
 Alpha; very much getting a feel for how the project will be structured
 long-term and what functionality will be offered.
 
-The existing functionality was added specifically to support another project
-currently in-development named "brick". This project is subject to change in
-order to better support that one.
+The existing functionality was added specifically to support the
+in-development [atc0005/brick][related-brick-project]. This library is subject
+to change in order to better support that project.
 
 ## Overview
 
@@ -76,6 +76,9 @@ submit improvements for review and potential inclusion into the project.
 ### Missing
 
 - Anything to do with traffic log entries
+- Examples
+  - the in-progress [atc0005/brick][related-brick-project] should serve well
+    for this once it is released
 
 ## Changelog
 
@@ -121,7 +124,7 @@ specific language governing permissions and limitations under the License.
 
 ### Related projects
 
-- [atc0005/brick](https://github.com/atc0005/brick) project
+- [atc0005/brick][related-brick-project] project
   - this project uses this library to provides tools (two as of this writing)
     intended to help manage login sessions.
 
@@ -141,5 +144,7 @@ specific language governing permissions and limitations under the License.
 [docs-homepage]: <https://godoc.org/github.com/atc0005/go-ezproxy>  "GoDoc coverage"
 
 [release-latest]: <https://github.com/atc0005/go-ezproxy/releases/latest>  "Latest Release"
+
+[related-brick-project]: <https://github.com/atc0005/brick> "atc0005/brick project URL"
 
 <!-- []: PLACEHOLDER "DESCRIPTION_HERE" -->
