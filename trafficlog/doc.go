@@ -15,5 +15,6 @@
 // limitations under the License.
 
 // Package trafficlog is intended for the processing of EZproxy traffic log
-// files
+// files. As of this writing, this package is a placeholder for potential
+// future work.
 package trafficlog

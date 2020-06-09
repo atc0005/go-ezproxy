@@ -22,11 +22,13 @@ import (
 	"strings"
 )
 
+// Terminator is an interface that represents the ability to terminate user
+// sessions via the Terminate method.
 type Terminator interface {
 	Terminate() []TerminateUserSessionResult
 }
 
-// TermTerminateUserSessionResult reflects the result of calling the `kill`
+// TerminateUserSessionResult reflects the result of calling the `kill`
 // subcommand of the ezproxy binary to terminate a specific user session.
 type TerminateUserSessionResult struct {
 	// SessionID is the specific ID associated with the session that we
@@ -53,7 +55,7 @@ type TerminateUserSessionResult struct {
 // UserSession values, calling the `kill` subcommand of that (presumably
 // ezproxy) binary. The result code, stdout, stderr output is captured for
 // each subcommand call and returned (along with other details) as a slice of
-// `TerminateUserSessionResult`
+// `TerminateUserSessionResult`.
 func TerminateUserSession(executable string, sessions ...UserSession) []TerminateUserSessionResult {
 
 	results := make([]TerminateUserSessionResult, 0, SessionsLimit)
@@ -155,7 +157,7 @@ func TerminateUserSession(executable string, sessions ...UserSession) []Terminat
 // Terminate attempts to process each UserSession using the provided
 // executable, returning the result code, stdout, stderr output as captured
 // for each subcommand call (along with other details) as a slice of
-// `TerminateUserSessionResult`
+// `TerminateUserSessionResult`.
 func (us UserSessions) Terminate(executable string) []TerminateUserSessionResult {
 	return TerminateUserSession(executable, us...)
 }
