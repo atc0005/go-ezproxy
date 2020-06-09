@@ -28,11 +28,24 @@ import (
 	"github.com/atc0005/go-ezproxy/internal/textutils"
 )
 
+// These are the events in the audit log applicable to this package.
 const (
-	EventLoginSuccess        string = "Login.Success"
+
+	// EventLoginSuccess is recorded for a successful login
+	EventLoginSuccess string = "Login.Success"
+
+	// EventLoginSuccessRelogin is recorded when a user closes their browser,
+	// but the session has not dropped so they are logged back in because the
+	// cookie has not expired yet. Note: this explanation was pulled from a
+	// cached Google search result, so its accuracy cannot be confirmed.
 	EventLoginSuccessRelogin string = "Login.Success.Relogin"
-	EventSessionIPChange     string = "Session.IPChange"
-	EventLogout              string = "Logout"
+
+	// EventSessionIPChange is recorded when a user establishes a session from
+	// one IP address, and during that session the IP address changes.
+	EventSessionIPChange string = "Session.IPChange"
+
+	// EventLogout is recorded when a user logs out of their session.
+	EventLogout string = "Logout"
 
 	// EventMinFieldLength is the minimum number of fields required
 	// to represent an audit log entry that we will process. The Logout event
@@ -66,8 +79,8 @@ type SessionEntry struct {
 	SessionID string
 }
 
-// SessionEntries is a collection of SessionEntry values.
-// Intended for aggregation before bulk processing of some kind.
+// SessionEntries is a collection of SessionEntry values that is intended for
+// aggregation before bulk processing of some kind.
 type SessionEntries []SessionEntry
 
 // auditLogReader represents a file reader specific to EZProxy audit logs.
@@ -103,7 +116,7 @@ type AuditReader interface {
 	// MatchingSessionEntries uses the previously provided username as a
 	// search key, the previously provided filename to search through and
 	// returns a slice of SessionEntry values which reflect entries in the
-	// specified audit file for that username
+	// specified audit file for that username.
 	MatchingSessionEntries() (SessionEntries, error)
 
 	// AllSessionEntries uses the previously provided filename to search
