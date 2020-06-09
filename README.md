@@ -30,9 +30,9 @@ Go library and tooling for working with EZproxy.
 Alpha; very much getting a feel for how the project will be structured
 long-term and what functionality will be offered.
 
-As of this writing, the existing functionality was added specifically to
-support another project in-development named "brick". This project is subject
-to change in order to better support that one.
+The existing functionality was added specifically to support another project
+currently in-development named "brick". This project is subject to change in
+order to better support that one.
 
 ## Overview
 
@@ -41,15 +41,18 @@ as reporting or terminating active login sessions (either for all usernames or
 specific usernames), filtering (or not) audit file entries or traffic patterns
 (not implemented yet) for specific usernames or domains.
 
-**NOTE**: Just to be perfectly clear, this library is intended to supplement
-the provided functionality of the official OCLC-developed/supported `EZproxy`
-application, not in any way replace it.
+**Just to be perfectly clear**:
+
+- this library is intended to supplement the provided functionality of the
+  official OCLC-developed/supported `EZproxy` application, not in any way
+  replace it.
+- this library is not in any way associated with OCLC, `EZproxy` or other
+  services offered by OCLC.
 
 ## Project home
 
-See [our GitHub repo][repo-url] for the latest code,
-to file an issue or submit improvements for review and potential inclusion
-into the project.
+See [our GitHub repo][repo-url] for the latest code, to file an issue or
+submit improvements for review and potential inclusion into the project.
 
 ## Features
 
@@ -59,10 +62,10 @@ into the project.
   - for all usernames
   - for a specific username
 
-- generate a list of active sessions using audit log
+- generate a list of active sessions using the audit log
   - using entires without a corresponding logout event type
 
-- generate a list of active sessions using active file
+- generate a list of active sessions using the active file
   - for all usernames
   - for a specific username
 

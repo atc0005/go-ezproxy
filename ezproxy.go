@@ -54,27 +54,41 @@ func DisableLogging() {
 	Logger.SetOutput(ioutil.Discard)
 }
 
+// These "SessionsLimit" constants are used as preallocation values for maps
+// and slices.
 const (
 
-	// This is intended to approximate the `::Limit=X` (where X is a positive
-	// whole number) value set within the user.txt EZproxy config file. This
-	// package uses this value as a preallocation capacity value for maps and
-	// slices.
+	// This is intended to approximate the `::Limit=X` value (where X is a
+	// positive whole number) set within the user.txt EZproxy config file.
+	// This package uses this value as a preallocation capacity value for maps
+	// and slices.
 	SessionsLimit int = 4
 
-	// This is simply a guess to use as a baseline for preallocating slice/map
-	// capacity in regards to ALL user sessions
+	// This is simply a guess to use as a baseline for preallocating maps and
+	// slices capacity in regards to ALL user sessions
 	AllUsersSessionsLimit int = SessionsLimit * 10
 )
 
-// This is as of the 6.x series
+// These are the known/confirmed details regarding Session IDs as of the 6.x
+// series.
 const (
 	SessionIDLength int    = 15
 	SessionIDRegex  string = "[a-zA-Z0-9]{15}"
 )
 
+// These are the known EZproxy binary exit codes and the associated output as
+// of the 6.x series. Please open an issue
+// (https://github.com/atc0005/go-ezproxy/issues) if you encounter others not
+// listed here.
 const (
-	KillSubCmdExitCodeSessionTerminated         int    = 0
+
+	// KillSubCmdExitCodeSessionTerminated is the exit code for sessions that
+	// are successfully terminated via the `ezproxy kill` subcommand.
+	KillSubCmdExitCodeSessionTerminated int = 0
+
+	// KillSubCmdExitTextTemplateSessionTerminated is a formatted string
+	// template for the output shown when a session is successfully
+	// terminated via the `ezproxy kill` subcommand.
 	KillSubCmdExitTextTemplateSessionTerminated string = "Session %s terminated"
 
 	KillSubCmdExitCodeSessionNotSpecified int    = 1

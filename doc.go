@@ -27,11 +27,23 @@ inclusion into the project.
 
 PURPOSE
 
-Process EZproxy related files sessions.
+Process EZproxy related files and sessions.
 
 FEATURES
 
-•  placeholder
+• generate a list of audit records for session-related events for all usernames or just for a specific username
+
+• generate a list of active sessions using the audit log using entires without a corresponding logout event type
+
+• generate a list of active sessions using the active file for all usernames or just for a specific username
+
+• terminate single user session or bulk user sessions
+
+OVERVIEW
+
+Ultimately, this package was written in order to support retrieving session
+information for a specific username so that the session can be terminated.
+Supplemental support for
 
 */
 package ezproxy
