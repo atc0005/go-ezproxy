@@ -53,6 +53,11 @@ const (
 	EventMinFieldLength int = 5
 )
 
+// TimeStampLayout is the layout for timestamps observed in use for the audit
+// log. For example, the "2020-05-24 00:17:37" value was found in column 1 of
+// a live audit log.
+const TimeStampLayout string = "2006-01-02 15:04:05"
+
 // SessionEntry reflects an entry in a audit/YYYYMMDD.txt file that
 // contains fields useful (or required) for working with user sessions. Each
 // entry in the audit log is tab separated. Not all event types recorded in
@@ -125,9 +130,6 @@ type AuditReader interface {
 	// filtered to a specific username.
 	AllSessionEntries() (SessionEntries, error)
 }
-
-// Example: "2020-05-24 00:17:37"
-const TimeStampLayout string = "2006-01-02 15:04:05"
 
 // AllSessionEntries uses the previously provided filename to search
 // through and return a slice of SessionEntry values which reflect ALL
@@ -247,7 +249,7 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 
 // MatchingSessionEntries uses the previously provided username as a search
 // key and returns a slice of SessionEntry values which reflect entries in the
-// specified audit file for that username
+// specified audit file for that username.
 func (alr auditLogReader) MatchingSessionEntries() (SessionEntries, error) {
 
 	ezproxy.Logger.Printf("Searching for: %q\n", alr.Username)
@@ -392,7 +394,7 @@ func (se SessionEntry) UserSession() ezproxy.UserSession {
 // UserSessions converts a collection of SessionEntry values into a collection
 // of UserSession values. How the SessionEntry values were retrieved
 // determines whether the UserSession values are filtered to a specific
-// username or not.
+// username or all usernames.
 func (se SessionEntries) UserSessions() ezproxy.UserSessions {
 
 	userSessions := make(ezproxy.UserSessions, 0, ezproxy.SessionsLimit)
