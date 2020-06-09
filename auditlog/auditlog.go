@@ -54,7 +54,7 @@ const (
 )
 
 // TimeStampLayout is the layout for timestamps observed in use for the audit
-// log. For example, the "2020-05-24 00:17:37" value was found in column 1 of
+// log. For example, "2020-05-24 00:17:37" is a timestamp found in column 1 of
 // a live audit log.
 const TimeStampLayout string = "2006-01-02 15:04:05"
 
