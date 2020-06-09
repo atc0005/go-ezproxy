@@ -14,5 +14,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package auditlog is intended for the processing of EZproxy audit files
+// Package auditlog is intended for the processing of EZproxy audit files.
 package auditlog

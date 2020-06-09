@@ -140,8 +140,8 @@ type UserSession struct {
 // aggregation before bulk processing of some kind.
 type UserSessions []UserSession
 
-// SessionsReader is the API for retrieving user sessions from one of the
-// audit log or active users and hosts files.
+// SessionsReader is an interface used as the API for retrieving user sessions
+// from one of the audit log or active users and hosts files.
 type SessionsReader interface {
 
 	// AllUserSessions returns a list of all session IDs along with their associated

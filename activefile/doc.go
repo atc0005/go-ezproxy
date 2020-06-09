@@ -15,5 +15,5 @@
 // limitations under the License.
 
 // Package activefile is intended for the processing of EZproxy active users
-// and hosts files
+// and hosts files.
 package activefile
