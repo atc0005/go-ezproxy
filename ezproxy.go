@@ -164,9 +164,9 @@ type SessionsReader interface {
 	// specific username or aggregating to check thresholds.
 	AllUserSessions() (UserSessions, error)
 
-	// UserSessions uses the previously provided username to return a list of
-	// all matching session IDs along with their associated IP Address in the
-	// form of a slice of UserSession values.
+	// MatchingUserSessions uses the previously provided username to return a
+	// list of all matching session IDs along with their associated IP Address
+	// in the form of a slice of UserSession values.
 	MatchingUserSessions() (UserSessions, error)
 
 	// SetSearchRetries is a helper method for setting the number of additional
