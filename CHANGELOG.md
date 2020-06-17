@@ -26,6 +26,36 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.1] - 2020-06-17
+
+### Added
+
+- New `TerminateUserSessionResults` type
+
+- New `HasError()` method to report whether an error was recorded when
+  terminating user sessions
+
+### Changed
+
+- Return type for multiple functions changed from
+  `[]TerminateUserSessionResult` to `TerminateUserSessionResults`
+
+- Enable Dependabot updates
+  - GitHub Actions
+  - Go Modules
+
+- Update dependencies
+  - `actions/setup-go`
+    - `v1` to `v2.0.3`
+  - `actions/checkout`
+    - `v1` to `v2.3.0`
+  - `actions/setup-node`
+    - `v1` to `v2.0.0`
+
+### Fixed
+
+- Doc comment: Fix name of MatchingUserSessions func
+
 ## [v0.1.0] - 2020-06-09
 
 Initial release!
@@ -64,7 +94,8 @@ application is released (currently pending review).
 
 <!-- Version header ref links here  -->
 
-[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.1...HEAD
+[v0.1.1]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.1
 [v0.1.0]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.0
 
 <!-- General footnotes here  -->
