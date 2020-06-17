@@ -25,7 +25,7 @@ import (
 // Terminator is an interface that represents the ability to terminate user
 // sessions via the Terminate method.
 type Terminator interface {
-	Terminate() []TerminateUserSessionResult
+	Terminate() TerminateUserSessionResults
 }
 
 // TerminateUserSessionResult reflects the result of calling the `kill`
@@ -51,12 +51,16 @@ type TerminateUserSessionResult struct {
 	Error error
 }
 
+// TerminateUserSessionResults is a collection of user session termination
+// results. Intended for bulk processing of some kind.
+type TerminateUserSessionResults []TerminateUserSessionResult
+
 // TerminateUserSession receives the path to an executable and one or many
 // UserSession values, calling the `kill` subcommand of that (presumably
 // ezproxy) binary. The result code, stdout, stderr output is captured for
 // each subcommand call and returned (along with other details) as a slice of
 // `TerminateUserSessionResult`.
-func TerminateUserSession(executable string, sessions ...UserSession) []TerminateUserSessionResult {
+func TerminateUserSession(executable string, sessions ...UserSession) TerminateUserSessionResults {
 
 	results := make([]TerminateUserSessionResult, 0, SessionsLimit)
 
@@ -158,6 +162,18 @@ func TerminateUserSession(executable string, sessions ...UserSession) []Terminat
 // executable, returning the result code, stdout, stderr output as captured
 // for each subcommand call (along with other details) as a slice of
 // `TerminateUserSessionResult`.
-func (us UserSessions) Terminate(executable string) []TerminateUserSessionResult {
+func (us UserSessions) Terminate(executable string) TerminateUserSessionResults {
 	return TerminateUserSession(executable, us...)
+}
+
+// HasError returns true if any errors were recorded when terminating user
+// sessions, false otherwise.
+func (tusr TerminateUserSessionResults) HasError() bool {
+	for idx := range tusr {
+		if tusr[idx].Error != nil {
+			return true
+		}
+	}
+
+	return false
 }
