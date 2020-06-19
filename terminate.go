@@ -29,10 +29,12 @@ type Terminator interface {
 }
 
 // TerminateUserSessionResult reflects the result of calling the `kill`
-// subcommand of the ezproxy binary to terminate a specific user session. The
-// original UserSession value is embedded in an attempt to make processing the
-// results more reliable/easier in deeper layers of client code.
+// subcommand of the ezproxy binary to terminate a specific user session.
 type TerminateUserSessionResult struct {
+
+	// UserSession value is embedded in an attempt to tie together termination
+	// results and the original session values in order to make processing
+	// related values more reliable/easier in deeper layers of client code.
 	UserSession
 
 	// ExitCode is what the command called by this application returns
