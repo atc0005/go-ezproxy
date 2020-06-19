@@ -29,11 +29,11 @@ type Terminator interface {
 }
 
 // TerminateUserSessionResult reflects the result of calling the `kill`
-// subcommand of the ezproxy binary to terminate a specific user session.
+// subcommand of the ezproxy binary to terminate a specific user session. The
+// original UserSession value is embedded in an attempt to make processing the
+// results more reliable/easier in deeper layers of client code.
 type TerminateUserSessionResult struct {
-	// SessionID is the specific ID associated with the session that we
-	// attempt to terminate
-	SessionID string
+	UserSession
 
 	// ExitCode is what the command called by this application returns
 	ExitCode int
@@ -65,10 +65,6 @@ func TerminateUserSession(executable string, sessions ...UserSession) TerminateU
 	results := make([]TerminateUserSessionResult, 0, SessionsLimit)
 
 	for _, session := range sessions {
-
-		result := TerminateUserSessionResult{
-			SessionID: session.SessionID,
-		}
 
 		Logger.Printf(
 			"Terminating session %q for username %q ... ",
@@ -145,10 +141,13 @@ func TerminateUserSession(executable string, sessions ...UserSession) TerminateU
 		Logger.Printf("Captured stdout: %s\n", cmdStdOut.String())
 		Logger.Printf("Captured stderr: %s\n", cmdStdErr.String())
 
-		result.ExitCode = cmd.ProcessState.ExitCode()
-		result.StdOut = strings.TrimSpace(cmdStdOut.String())
-		result.StdErr = strings.TrimSpace(cmdStdErr.String())
-		result.Error = cmdErr
+		result := TerminateUserSessionResult{
+			UserSession: session,
+			ExitCode:    cmd.ProcessState.ExitCode(),
+			StdOut:      strings.TrimSpace(cmdStdOut.String()),
+			StdErr:      strings.TrimSpace(cmdStdErr.String()),
+			Error:       cmdErr,
+		}
 
 		results = append(results, result)
 
