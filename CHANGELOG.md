@@ -26,6 +26,19 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.2] - 2020-06-19
+
+### Changed
+
+- Embed `UserSession` within `TerminateSessionResult` instead of
+  cherry-picking specific values. The intent is to allow deeper layers of
+  client code to easily access the original `UserSession` field values (e.g.,
+  IP Address).
+
+- Update dependencies
+  - `actions/checkout`
+    - `v2.3.0` to `v2.3.1`
+
 ## [v0.1.1] - 2020-06-17
 
 ### Added
@@ -94,7 +107,8 @@ application is released (currently pending review).
 
 <!-- Version header ref links here  -->
 
-[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.2...HEAD
+[v0.1.2]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.1
 [v0.1.1]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.1
 [v0.1.0]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.0
 
