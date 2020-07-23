@@ -125,7 +125,14 @@ func NewReader(username string, filename string) (ezproxy.SessionsReader, error)
 // handle converting these entries to UserSession values.
 func (afr activeFileReader) filterEntries(validPrefixes []string) ([]ezproxy.FileEntry, error) {
 
-	ezproxy.Logger.Printf("filterEntries: Attempting to open %q\n", afr.Filename)
+	ezproxy.Logger.Printf(
+		"filterEntries: Request to open %q received\n",
+		afr.Filename,
+	)
+	ezproxy.Logger.Printf(
+		"filterEntries: Attempting to open sanitized version of file %q\n",
+		filepath.Clean(afr.Filename),
+	)
 
 	f, err := os.Open(filepath.Clean(afr.Filename))
 	if err != nil {
