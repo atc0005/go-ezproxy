@@ -163,11 +163,14 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 	}
 	defer func() {
 		if err := f.Close(); err != nil {
-			ezproxy.Logger.Printf(
-				"AllSessionEntries: failed to close file %q: %s",
-				alr.Filename,
-				err.Error(),
-			)
+			// Ignore "file already closed" errors
+			if !errors.Is(err, os.ErrClosed) {
+				ezproxy.Logger.Printf(
+					"AllSessionEntries: failed to close file %q: %s",
+					alr.Filename,
+					err.Error(),
+				)
+			}
 		}
 	}()
 
@@ -257,6 +260,15 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 	userSessions := make(SessionEntries, 0, ezproxy.SessionsLimit)
 	for _, entry := range userSessionIDsIndex {
 		userSessions = append(userSessions, entry)
+	}
+
+	// explicitly close file, bail if failure occurs
+	if err := f.Close(); err != nil {
+		return nil, fmt.Errorf(
+			"func AllSessionEntries: failed to close file %q: %w",
+			alr.Filename,
+			err,
+		)
 	}
 
 	return userSessions, nil
