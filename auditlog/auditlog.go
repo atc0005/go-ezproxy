@@ -148,7 +148,14 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 		EventLogout,
 	}
 
-	ezproxy.Logger.Printf("Attempting to open %q\n", alr.Filename)
+	ezproxy.Logger.Printf(
+		"AllSessionEntries: Request to open %q received\n",
+		alr.Filename,
+	)
+	ezproxy.Logger.Printf(
+		"AllSessionEntries: Attempting to open sanitized version of file %q\n",
+		filepath.Clean(alr.Filename),
+	)
 
 	f, err := os.Open(filepath.Clean(alr.Filename))
 	if err != nil {
