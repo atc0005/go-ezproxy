@@ -154,7 +154,15 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 	if err != nil {
 		return nil, fmt.Errorf("func AllSessionEntries: error encountered opening file %q: %w", alr.Filename, err)
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); err != nil {
+			ezproxy.Logger.Printf(
+				"AllSessionEntries: failed to close file %q: %s",
+				alr.Filename,
+				err.Error(),
+			)
+		}
+	}()
 
 	ezproxy.Logger.Printf("Searching for: %q\n", alr.Username)
 

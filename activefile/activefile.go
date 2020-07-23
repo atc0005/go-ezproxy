@@ -131,7 +131,15 @@ func (afr activeFileReader) filterEntries(validPrefixes []string) ([]ezproxy.Fil
 	if err != nil {
 		return nil, fmt.Errorf("func filterEntries: error encountered opening file %q: %w", afr.Filename, err)
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); err != nil {
+			ezproxy.Logger.Printf(
+				"filterEntries: failed to close file %q: %s",
+				afr.Filename,
+				err.Error(),
+			)
+		}
+	}()
 
 	s := bufio.NewScanner(f)
 
