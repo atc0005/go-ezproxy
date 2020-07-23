@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -123,7 +124,7 @@ func (afr activeFileReader) filterEntries(validPrefixes []string) ([]ezproxy.Fil
 
 	ezproxy.Logger.Printf("filterEntries: Attempting to open %q\n", afr.Filename)
 
-	f, err := os.Open(afr.Filename)
+	f, err := os.Open(filepath.Clean(afr.Filename))
 	if err != nil {
 		return nil, fmt.Errorf("func filterEntries: error encountered opening file %q: %w", afr.Filename, err)
 	}
