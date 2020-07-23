@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -149,7 +150,7 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 
 	ezproxy.Logger.Printf("Attempting to open %q\n", alr.Filename)
 
-	f, err := os.Open(alr.Filename)
+	f, err := os.Open(filepath.Clean(alr.Filename))
 	if err != nil {
 		return nil, fmt.Errorf("func AllSessionEntries: error encountered opening file %q: %w", alr.Filename, err)
 	}
