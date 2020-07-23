@@ -29,17 +29,20 @@ import (
 )
 
 const (
-	// All lines containing a session ID (among other details) begin with this
-	// single letter prefix
+	// SessionLinePrefix is a single letter prefix found at the start of all
+	// lines containing a session ID (among other details).
 	SessionLinePrefix string = "S"
 
-	// Indicate that this line should be found on even numbered lines
+	// SessionLineEvenNumbered indicates that this line should be found on
+	// even numbered lines.
 	SessionLineEvenNumbered bool = true
 
-	// All lines containing a username begin with this single letter prefix
+	// UsernameLinePrefix is a single letter prefix found at the start of all
+	// lines containing a username.
 	UsernameLinePrefix string = "L"
 
-	// Indicate that this line should be found on odd numbered lines
+	// UsernameLineEvenNumbered indicates that this line should be found on
+	// odd numbered lines.
 	UsernameLineEvenNumbered bool = false
 )
 
