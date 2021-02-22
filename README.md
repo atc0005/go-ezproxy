@@ -4,7 +4,7 @@
 Go library and tooling for working with EZproxy.
 
 [![Latest Release](https://img.shields.io/github/release/atc0005/go-ezproxy.svg?style=flat-square)][repo-url-release-latest]
-[![GoDoc](https://godoc.org/github.com/atc0005/go-ezproxy?status.svg)][docs-homepage]
+[![Go Reference](https://pkg.go.dev/badge/github.com/atc0005/go-ezproxy.svg)][docs-homepage]
 [![Validate Codebase](https://github.com/atc0005/go-ezproxy/workflows/Validate%20Codebase/badge.svg)](https://github.com/atc0005/go-ezproxy/actions?query=workflow%3A%22Validate+Codebase%22)
 [![Validate Docs](https://github.com/atc0005/go-ezproxy/workflows/Validate%20Docs/badge.svg)](https://github.com/atc0005/go-ezproxy/actions?query=workflow%3A%22Validate+Docs%22)
 [![Lint and Build using Makefile](https://github.com/atc0005/go-ezproxy/workflows/Lint%20and%20Build%20using%20Makefile/badge.svg)](https://github.com/atc0005/go-ezproxy/actions?query=workflow%3A%22Lint+and+Build+using+Makefile%22)
@@ -156,7 +156,7 @@ specific language governing permissions and limitations under the License.
 [repo-url-issues]: <https://github.com/atc0005/go-ezproxy/issues>  "This project's issues list"
 [repo-url-release-latest]: <https://github.com/atc0005/go-ezproxy/releases/latest>  "This project's latest release"
 
-[docs-homepage]: <https://godoc.org/github.com/atc0005/go-ezproxy>  "GoDoc coverage"
+[docs-homepage]: <https://pkg.go.dev/github.com/atc0005/go-ezproxy>  "GoDoc coverage"
 
 [related-brick-project]: <https://github.com/atc0005/brick> "atc0005/brick project URL"
 
