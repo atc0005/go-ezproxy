@@ -161,6 +161,10 @@ func (alr auditLogReader) AllSessionEntries() (SessionEntries, error) {
 	if err != nil {
 		return nil, fmt.Errorf("func AllSessionEntries: error encountered opening file %q: %w", alr.Filename, err)
 	}
+
+	// #nosec G307
+	// Believed to be a false-positive from recent gosec release
+	// https://github.com/securego/gosec/issues/714
 	defer func() {
 		if err := f.Close(); err != nil {
 			// Ignore "file already closed" errors
