@@ -49,7 +49,7 @@ lintinstall:
 	@export PATH="${PATH}:$(go env GOPATH)/bin"
 
 	@echo "Explicitly enabling Go modules mode per command"
-	(cd; GO111MODULE="on" go get honnef.co/go/tools/cmd/staticcheck)
+	go install honnef.co/go/tools/cmd/staticcheck@latest
 
 	@echo Installing latest stable golangci-lint version per official installation script ...
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin

@@ -15,10 +15,9 @@
 // limitations under the License.
 
 /*
-
 Package auditlog is intended for the processing of EZproxy audit log files.
 
-OVERVIEW
+# Overview
 
 EZproxy can be configured to record a variety of audit/security related log
 entries to each daily audit log file. The specific events recorded vary based
@@ -42,7 +41,7 @@ library may be further updated to expose those details to client applications
 (e.g., number of failed login attempts and whether a set of failed login
 attempts eventually resulted in a successful login).
 
-FIELD TYPES
+# Field Types
 
 Each audit log file is composed of tab-separated fields, so presumably a CSV
 reader could (and perhaps in hindsight *should*) be used with this file. As of
@@ -58,7 +57,7 @@ the field names below are taken directly from a real audit log file.
 
 Currently we only deal with the first 5 fields.
 
-RACE CONDITION
+# Race Condition
 
 NOTE: EZproxy does not immediately update the Active Users and Hosts "state"
 file with state changes; when a user account logs in/out, there is a race
@@ -72,6 +71,5 @@ attempts) can be modified by the caller as needed.
 This race condition is also believed to affect the audit log, so the same
 retry/retry delay behavior is provided for the audit log Reader as with the
 active file reader.
-
 */
 package auditlog
