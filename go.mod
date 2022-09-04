@@ -16,4 +16,4 @@
 
 module github.com/atc0005/go-ezproxy
 
-go 1.14
+go 1.19
