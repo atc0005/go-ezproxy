@@ -262,10 +262,6 @@ application is released (currently pending review).
 
 <!-- General footnotes here  -->
 
-[repo-url-home]: <https://github.com/atc0005/go-ezproxy>  "This project's GitHub repo"
 [repo-url-issues]: <https://github.com/atc0005/go-ezproxy/issues>  "This project's issues list"
-[repo-url-release-latest]: <https://github.com/atc0005/go-ezproxy/releases/latest>  "This project's latest release"
-
-[docs-homepage]: <https://godoc.org/github.com/atc0005/go-ezproxy>  "GoDoc coverage"
 
 [related-brick-project]: <https://github.com/atc0005/brick> "atc0005/brick project URL"
